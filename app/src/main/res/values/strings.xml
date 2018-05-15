@@ -1,3 +1,14 @@
 <resources>
     <string name="app_name">CarJoy</string>
+    <string name="forward">Вперед</string>
+    <string name="backward">Назад</string>
+    <string name="left">Влево</string>
+    <string name="right">Вправо</string>
+    <string name="refresh">Обновить</string>
+    <string name="default_pwmMax">255</string>
+    <string name="default_commandLeft">L</string>
+    <string name="default_commandRight">R</string>
+    <string name="default_commandHorn">H</string>
+    <string name="default_pwmBtnMotorLeft">255</string>
+    <string name="default_pwmBtnMotorRight">255</string>
 </resources>

@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ControlsActivity"
+    tools:layout_editor_absoluteY="73dp">
+
+    <Button
+        android:id="@+id/button_for"
+        android:layout_width="wrap_content"
+        android:layout_height="44dp"
+        android:layout_marginStart="68dp"
+        android:layout_marginTop="80dp"
+        android:text="@string/forward"
+        android:visibility="visible"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/button_back"
+        android:layout_width="wrap_content"
+        android:layout_height="51dp"
+        android:layout_marginBottom="60dp"
+        android:layout_marginStart="68dp"
+        android:text="@string/backward"
+        android:visibility="visible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <Button
+        android:id="@+id/button_left"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="37dp"
+        android:text="@string/left"
+        android:visibility="visible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/button_right"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/button_right"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="87dp"
+        android:text="@string/right"
+        android:visibility="visible"
+        app:layout_constraintBaseline_toBaselineOf="@+id/button_left"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <Button
+        android:id="@+id/button_stop"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Button"
+        tools:layout_editor_absoluteX="196dp"
+        tools:layout_editor_absoluteY="119dp" />
+
+</android.support.constraint.ConstraintLayout>
