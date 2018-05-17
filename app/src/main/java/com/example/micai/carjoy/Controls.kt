@@ -18,6 +18,11 @@ import kotlinx.android.synthetic.main.controls_activity.view.*
 import org.jetbrains.anko.toast
 import java.io.IOException
 import java.util.*
+import android.widget.Toast
+import android.view.View.OnTouchListener
+import android.R.attr.button
+
+
 
 
 
@@ -57,33 +62,72 @@ class ControlsActivity : AppCompatActivity() {
         this.commandRight = resources.getText(R.string.default_commandRight) as String
 
 
-        button_for.setOnClickListener {
-            motorLeft = -pwmBtnMotorLeft
-            motorRight = -pwmBtnMotorRight
-            sendData(commandLeft + motorLeft + "\r" + commandRight + motorRight + "\r")
 
-        }
+        button_for.setOnTouchListener(OnTouchListener { v, event ->
+            if (event.action == MotionEvent.ACTION_DOWN) {
+                        motorLeft = pwmBtnMotorLeft
+                        motorRight = pwmBtnMotorRight
+                        sendData (commandLeft + motorLeft + "\r" + commandRight + motorRight + "\r")
+                    }
 
-        button_back.setOnClickListener {
-            motorLeft = -pwmBtnMotorLeft
-            motorRight = -pwmBtnMotorRight
-            sendData(commandLeft + motorLeft + "\r" + commandRight + motorRight + "\r")
-        }
-
-        button_left.setOnClickListener {
-            motorLeft = 0
-            motorRight = pwmBtnMotorRight
-            sendData(commandLeft + motorLeft + "\r" + commandRight + motorRight + "\r")
-        }
-
-        button_right.setOnClickListener {
-            motorLeft = pwmBtnMotorLeft
-            motorRight = 0
-            sendData(commandLeft + motorLeft + "\r" + commandRight + motorRight + "\r")
-        }
+            if (event.action == MotionEvent.ACTION_UP){
+                        motorLeft = 0
+                        motorRight = 0
+                        sendData (commandLeft + motorLeft + "\r" + commandRight + motorRight + "\r")
+                    }
+            false
+                })
 
 
-    }
+
+            button_back.setOnTouchListener(OnTouchListener { v, event ->
+                if (event.action == MotionEvent.ACTION_DOWN) {
+                    motorLeft = -pwmBtnMotorLeft
+                    motorRight = -pwmBtnMotorRight
+                    sendData (commandLeft + motorLeft + "\r" + commandRight + motorRight + "\r")
+                }
+
+                if (event.action == MotionEvent.ACTION_UP){
+                    motorLeft = 0
+                    motorRight = 0
+                    sendData (commandLeft + motorLeft + "\r" + commandRight + motorRight + "\r")
+                }
+                false
+            })
+
+                   button_left.setOnTouchListener(OnTouchListener { v, event ->
+                       if (event.action == MotionEvent.ACTION_DOWN) {
+                           motorLeft = pwmBtnMotorLeft
+                           motorRight = 0
+                           sendData (commandLeft + motorLeft + "\r" + commandRight + motorRight + "\r")
+                       }
+
+                       if (event.action == MotionEvent.ACTION_UP){
+                           motorLeft = 0
+                           motorRight = 0
+                           sendData (commandLeft + motorLeft + "\r" + commandRight + motorRight + "\r")
+                       }
+                       false
+                   })
+
+                   button_right.setOnTouchListener(OnTouchListener { v, event ->
+                       if (event.action == MotionEvent.ACTION_DOWN) {
+                           motorLeft = 0
+                           motorRight = pwmBtnMotorRight
+                           sendData (commandLeft + motorLeft + "\r" + commandRight + motorRight + "\r")
+                       }
+
+                       if (event.action == MotionEvent.ACTION_UP){
+                           motorLeft = 0
+                           motorRight = 0
+                           sendData (commandLeft + motorLeft + "\r" + commandRight + motorRight + "\r")
+                       }
+                       false
+                   })
+       }
+
+
+
 
 
     fun sendData(input: String) {
@@ -150,6 +194,10 @@ class ControlsActivity : AppCompatActivity() {
 
 
 }
+
+
+
+
 
 
 

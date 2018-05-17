@@ -50,7 +50,6 @@ class MainActivity : AppCompatActivity(){
         if (!m_pairedDevices.isEmpty()) {
             for (device: BluetoothDevice in m_pairedDevices) {
                 list.add(device)
-                Log.i("device", "" + device)
             }
         } else {
             toast("Устройств не найдено")
@@ -61,7 +60,6 @@ class MainActivity : AppCompatActivity(){
         select_device_list.onItemClickListener = AdapterView.OnItemClickListener { _, _, position, _ ->
             val device: BluetoothDevice = list[position]
             val address: String = device.address
-
             val intent = Intent(this, ControlsActivity::class.java)
             intent.putExtra(MAC_ADRESS, address)
             startActivity(intent)
@@ -78,8 +76,13 @@ class MainActivity : AppCompatActivity(){
                     toast("Bluetooth выключен")
                 }
             }else if (resultCode == Activity.RESULT_CANCELED){
-                toast("Активация bluetooth была закрыта")
+                toast("Активация bluetooth была отменена")
             }
         }
     }
+
+
+
+
+
 }
