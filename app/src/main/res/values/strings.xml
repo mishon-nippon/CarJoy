@@ -9,6 +9,6 @@
     <string name="default_commandLeft">L</string>
     <string name="default_commandRight">R</string>
     <string name="default_commandHorn">H</string>
-    <string name="default_pwmBtnMotorLeft">255</string>
-    <string name="default_pwmBtnMotorRight">255</string>
+    <string name="options">Настройки</string>
+    <string name="OK">Применить</string>
 </resources>

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <EditTextPreference
+        android:defaultValue="@+string/default_pwmMax"
+        android:key="max_speed"
+        android:selectAllOnFocus="true"
+        android:singleLine="true"
+        android:title="Максимальная скорость"
+        android:summary="Значение по умолчанию 255"
+        android:dialogTitle="Введите макс. скорость (от 0 до 255)"
+        />
+</PreferenceScreen>

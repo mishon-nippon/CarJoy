@@ -1,5 +1,6 @@
 package com.example.micai.carjoy
 
+import android.annotation.SuppressLint
 import android.app.ProgressDialog
 import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothDevice
@@ -7,29 +8,23 @@ import android.bluetooth.BluetoothSocket
 import android.content.Context
 import android.content.Intent
 import android.os.AsyncTask
-import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import android.preference.PreferenceManager
+import android.support.v7.app.AppCompatActivity
 import android.util.Log
+import android.view.Menu
+import android.view.MenuItem
 import android.view.MotionEvent
-import android.view.View
-import android.widget.Button
 import kotlinx.android.synthetic.main.controls_activity.*
-import kotlinx.android.synthetic.main.controls_activity.view.*
-import org.jetbrains.anko.toast
 import java.io.IOException
 import java.util.*
-import android.widget.Toast
-import android.view.View.OnTouchListener
-import android.R.attr.button
 
 
-
-
-
+@Suppress("DEPRECATION")
 class ControlsActivity : AppCompatActivity() {
     companion object {
         lateinit var MacAddress: String
-        var MY_UUID = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB")
+        var MY_UUID = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB")!!
         lateinit var m_bluetoothAdapter: BluetoothAdapter
         lateinit var m_progress: ProgressDialog
         var m_bluetoothSocket: BluetoothSocket? = null
@@ -38,8 +33,7 @@ class ControlsActivity : AppCompatActivity() {
 
     private var motorLeft = 0
     private var motorRight = 0
-    private var pwmBtnMotorLeft: Int = 0
-    private var pwmBtnMotorRight: Int = 0
+    private var pwmMax: Int = 0
     private var commandLeft: String? = null
     private var commandRight: String? = null
 
@@ -56,17 +50,16 @@ class ControlsActivity : AppCompatActivity() {
 
         ConnectToDevice(this).execute()
 
-        this.pwmBtnMotorLeft = Integer.parseInt(resources.getText(R.string.default_pwmBtnMotorLeft) as String)
-        this.pwmBtnMotorRight = Integer.parseInt(resources.getText(R.string.default_pwmBtnMotorRight) as String)
+        this.pwmMax = Integer.parseInt(resources.getText(R.string.default_pwmMax) as String)
         this.commandLeft = resources.getText(R.string.default_commandLeft) as String
         this.commandRight = resources.getText(R.string.default_commandRight) as String
 
+        loadPref()
 
-
-        button_for.setOnTouchListener(OnTouchListener { v, event ->
+        button_for.setOnTouchListener({ _, event ->
             if (event.action == MotionEvent.ACTION_DOWN) {
-                        motorLeft = pwmBtnMotorLeft
-                        motorRight = pwmBtnMotorRight
+                        motorLeft = -pwmMax
+                        motorRight = -pwmMax
                         sendData (commandLeft + motorLeft + "\r" + commandRight + motorRight + "\r")
                     }
 
@@ -80,10 +73,10 @@ class ControlsActivity : AppCompatActivity() {
 
 
 
-            button_back.setOnTouchListener(OnTouchListener { v, event ->
+            button_back.setOnTouchListener({ _, event ->
                 if (event.action == MotionEvent.ACTION_DOWN) {
-                    motorLeft = -pwmBtnMotorLeft
-                    motorRight = -pwmBtnMotorRight
+                    motorLeft = pwmMax
+                    motorRight = pwmMax
                     sendData (commandLeft + motorLeft + "\r" + commandRight + motorRight + "\r")
                 }
 
@@ -95,9 +88,9 @@ class ControlsActivity : AppCompatActivity() {
                 false
             })
 
-                   button_left.setOnTouchListener(OnTouchListener { v, event ->
+                   button_left.setOnTouchListener({ _, event ->
                        if (event.action == MotionEvent.ACTION_DOWN) {
-                           motorLeft = pwmBtnMotorLeft
+                           motorLeft = -pwmMax
                            motorRight = 0
                            sendData (commandLeft + motorLeft + "\r" + commandRight + motorRight + "\r")
                        }
@@ -110,10 +103,10 @@ class ControlsActivity : AppCompatActivity() {
                        false
                    })
 
-                   button_right.setOnTouchListener(OnTouchListener { v, event ->
+                   button_right.setOnTouchListener({ _, event ->
                        if (event.action == MotionEvent.ACTION_DOWN) {
                            motorLeft = 0
-                           motorRight = pwmBtnMotorRight
+                           motorRight = -pwmMax
                            sendData (commandLeft + motorLeft + "\r" + commandRight + motorRight + "\r")
                        }
 
@@ -128,9 +121,7 @@ class ControlsActivity : AppCompatActivity() {
 
 
 
-
-
-    fun sendData(input: String) {
+    private fun sendData(input: String) {
         if (m_bluetoothSocket != null) { try {
             m_bluetoothSocket!!.outputStream.write(input.toByteArray())
         } catch (e: IOException) {
@@ -139,7 +130,7 @@ class ControlsActivity : AppCompatActivity() {
         }
     }
 
-    fun disconnect() {
+    private fun disconnect() {
         if (m_bluetoothSocket != null) {
             try {
                 m_bluetoothSocket!!.close()
@@ -152,12 +143,12 @@ class ControlsActivity : AppCompatActivity() {
         finish()
     }
 
+    @Suppress("DEPRECATION")
     private class ConnectToDevice(c: Context) : AsyncTask<Void, Void, String>() {
-        private var connectSucess: Boolean = true
-        private val context: Context
-        init {
-            this.context = c
-        }
+        private var connectSuccess: Boolean = true
+        @SuppressLint("StaticFieldLeak")
+        private val context: Context = c
+
         override fun onPreExecute() {
             super.onPreExecute()
             m_progress = ProgressDialog.show(context, "Соединение", "Пожалуйста, подождите")
@@ -173,7 +164,7 @@ class ControlsActivity : AppCompatActivity() {
                     m_bluetoothSocket!!.connect()
                 }
             } catch (e: IOException) {
-                connectSucess = false
+                connectSuccess = false
                 e.printStackTrace()
             }
             return null
@@ -181,7 +172,7 @@ class ControlsActivity : AppCompatActivity() {
 
         override fun onPostExecute(result: String?) {
             super.onPostExecute(result)
-            if (!connectSucess) {
+            if (!connectSuccess) {
                 Log.i("data", "Не могу соедениться")
             } else {
                 m_Connected = true
@@ -192,8 +183,35 @@ class ControlsActivity : AppCompatActivity() {
 
     }
 
+    override fun onPause() {
+        super.onPause()
+        disconnect()
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        loadPref()
+    }
+
+    private fun loadPref(){
+        val mySharedPreferences = PreferenceManager.getDefaultSharedPreferences(this)
+        pwmMax=Integer.parseInt(mySharedPreferences.getString("max_speed", pwmMax.toString()))
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        menuInflater.inflate(R.menu.menu_main, menu)
+        return true
+    }
+
+    override fun onOptionsItemSelected (item: MenuItem): Boolean {
+        val intent = Intent(this@ControlsActivity, SettingsActivity::class.java)
+        startActivityForResult(intent, 0)
+        return true
+    }
+
 
 }
+
+
 
 
 
