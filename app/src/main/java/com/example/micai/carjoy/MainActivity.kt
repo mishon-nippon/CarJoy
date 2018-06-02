@@ -49,20 +49,21 @@ class MainActivity : AppCompatActivity() {
         if (!devices.isEmpty()) {
             for (device: BluetoothDevice in devices) {
                 list.add(device)
+                val adapter = ArrayAdapter(this, android.R.layout.simple_list_item_1, list)
+                select_device_list.adapter = adapter
+                select_device_list.onItemClickListener = AdapterView.OnItemClickListener { _, _, position, _ ->
+                    val device: BluetoothDevice = list[position]
+                    val address: String = device.address
+                    val intent = Intent(this, ControlActivity::class.java)
+                    intent.putExtra(MAC_ADRESS, address)
+                    startActivity(intent)
+                }
             }
         } else {
             toast("Устройств не найдено")
         }
 
-        val adapter = ArrayAdapter(this, android.R.layout.simple_list_item_1, list)
-        select_device_list.adapter = adapter
-        select_device_list.onItemClickListener = AdapterView.OnItemClickListener { _, _, position, _ ->
-            val device: BluetoothDevice = list[position]
-            val address: String = device.address
-            val intent = Intent(this, ControlsActivity::class.java)
-            intent.putExtra(MAC_ADRESS, address)
-            startActivity(intent)
-        }
+
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
